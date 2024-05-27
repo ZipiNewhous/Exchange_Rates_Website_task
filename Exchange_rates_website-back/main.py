@@ -1,7 +1,11 @@
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import requests
+import urllib.request
+import json
 
+import data
 
 
 # init app
@@ -22,76 +26,40 @@ app.add_middleware(
 )
 
 
-supported_currencies = ["USD", "EUR", "GBP", "CNY", "ILS"]
-
-exchange_rates = [
-    {
-      'base': 'USD',
-      'conversion_rates': {
-        'EUR': 0.9199,
-        'GBP': 0.7897,
-        'CNY': 7.2183,
-        'ILS': 3.6754,
-      }
-    },
-    {
-      'base': 'EUR',
-      'conversion_rates': {
-        'USD': 1.0873,
-        'GBP': 0.8581,
-        'CNY': 7.8435,
-        'ILS': 3.9969,
-      }
-    },
-    {
-      'base': 'GBP',
-      'conversion_rates': {
-        'USD': 1.2663,
-        'EUR': 1.1653,
-        'CNY': 9.1345,
-        'ILS': 4.6567,
-      }
-    },
-    {
-      'base': 'CNY',
-      'conversion_rates': {
-        'USD': 0.1385,
-        'EUR': 0.1275,
-        'GBP': 0.1095,
-        'ILS': 0.5100,
-      }
-    },
-    {
-      'base': 'ILS',
-      'conversion_rates': {
-        'USD': 0.2719,
-        'EUR': 0.2502,
-        'GBP': 0.2148,
-        'CNY': 1.9597,
-      }
-    }
-
-  ]
+# # get supported currencies
+# @app.get("/currencies")
+# async def get_supported_currencies():
+#     return {"currencies": data.supported_currencies}
 
 
-# get supported currencies
+# get supported currencies - real data
 @app.get("/currencies")
 async def get_supported_currencies():
-    return {"currencies": supported_currencies}
+    currencies = []
+    response = await get_exchange_rates_by_base_currency("USD")
+    data = response["exchange_rates"]
+    for currency in data:
+        currencies.append(currency)
+    return {"currencies": currencies}
 
-# get exchange_rates of specific currency
+
+# # get exchange_rates of specific currency - fake data
+# @app.get("/exchange_rates/{base_currency}")
+# async def get_exchange_rates_by_base_currency(base_currency: str):
+#     return {"exchange_rates":data.exchange_rates[base_currency]}
+
+# get exchange_rates of specific currency - real data from out server
 @app.get("/exchange_rates/{base_currency}")
 async def get_exchange_rates_by_base_currency(base_currency: str):
-    matching_rate = None
-    for rate in exchange_rates:
-        if rate['base'] == base_currency:
-            matching_rate = rate
-            break
-
-    if matching_rate:
-        return {"exchange_rates": matching_rate}
-    else:
-        return {"exchange_rates": 'None'}
+    api_key = '210899f1a6836ea58e846b0d'
+    url = f'https://v6.exchangerate-api.com/v6/{api_key}/latest/{base_currency}'
+    response = urllib.request.urlopen(url).read()
+    # Decode the response from bytes to a string
+    response_string = response.decode('utf-8')
+    # Load the JSON string into a dictionary
+    data = json.loads(response_string)
+    # return {"exchange_rates":data.conversion_rates}
+    return {"exchange_rates":data["conversion_rates"]}
 
 
 @app.get("/", tags=["root"])
@@ -101,7 +69,4 @@ async def read_root() -> dict:
 # turn up the API app
 if __name__ == '__main__':
   uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True, access_log=True)
-
-
-
 

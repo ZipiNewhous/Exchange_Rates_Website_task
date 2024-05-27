@@ -1,13 +1,11 @@
 import React from 'react';
 
-const ExchangeRateTable = ({exchangeRates }) => {
+const ExchangeRateTable = ({ baseCurrency, exchangeRates }) => {
   if (!exchangeRates) {
     return <div>Loading exchange rates...</div>;
   }
-  const baseCurrency = exchangeRates.base;
-  const conversionRates = exchangeRates.conversion_rates;
 
-  return (
+  return(
     <table>
       <thead>
         <tr>
@@ -17,11 +15,11 @@ const ExchangeRateTable = ({exchangeRates }) => {
         </tr>
       </thead>
       <tbody>
-        {Object.keys(conversionRates).map((targetCurrency) => (
+        {Object.keys(exchangeRates).map((targetCurrency) => (
           <tr key={targetCurrency}>
             <td>{baseCurrency}</td>
             <td>{targetCurrency}</td>
-            <td>{conversionRates[targetCurrency]}</td>
+            <td>{exchangeRates[targetCurrency]}</td>
           </tr>
         ))}
       </tbody>
