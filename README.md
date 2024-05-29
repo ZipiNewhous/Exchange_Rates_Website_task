@@ -9,7 +9,7 @@ install node:
 https://nodejs.org/en/download/package-manager
 
 
-locate at the project folder in 2 cmds, then run:
+navigate to the project folder in 2 cmds, then run:
 
 first cmd:
 
@@ -27,4 +27,8 @@ npm run dev
 run the applicatio using Docker:
 install Docker:
 https://docs.docker.com/desktop/
+
+
+navigate to the project folder, then run:
+docker compose up
 
