@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  fastAPI:
+    image: back
+    build: ./Exchange_rates_website-back
+    container_name: backEnd
+    ports:
+      - 8000:8000
+
+  exchange-rates-web:
+    image: front
+    build: ./Exchange_rates_website-front
+    container_name: frontEnd
+    depends_on:
+      - fastAPI
+    ports:
+      - 5173:5173
+

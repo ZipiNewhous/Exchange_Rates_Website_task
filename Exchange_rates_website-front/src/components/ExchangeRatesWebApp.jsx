@@ -4,7 +4,7 @@ import ExchangeRateTable from './ExchangeRateTable';
 import TanstackExchangeRateTable from './TanstackExchangeRateTable';
 
 
-function ExchangeRatesWebApp() {
+const ExchangeRatesWebApp = () => {
   const [supportedCurrencies, setSupportedCurrencies] = useState([])
   const [baseCurrency, setBaseCurrency] = useState("USD");
   const [exchangeRates, setExchangeRates] = useState(null);
@@ -15,6 +15,7 @@ function ExchangeRatesWebApp() {
     const data = await response.json();
     setExchangeRates(data.exchange_rates);
   };
+  
   // const getExchangeRates = (baseCurrency) => {
   //   fetch(URL + `exchange_rates/${baseCurrency}`)
   //     .then(response => response.json())
@@ -27,6 +28,7 @@ function ExchangeRatesWebApp() {
     const data = await response.json();
     setSupportedCurrencies(data.currencies);
   };
+
   // const getSupportedCurrencies = () => {
   //   fetch(URL + 'currencies')
   //     .then(response => response.json())

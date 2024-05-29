@@ -1,33 +1,23 @@
-import React, { useEffect } from 'react';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
   useReactTable,
-  getSortedRowModel,
 } from '@tanstack/react-table'
 
 
-
-
 const TanstackExchangeRateTable = ({ baseCurrency, exchangeRates }) => {
-
 
   if (!exchangeRates) {
     return <div>Loading exchange rates...</div>;
   }
 
   const [data, setData] = useState([]);
-  const [columnSorts, setColumnSorts] = useState([]);
-
-
 
   useEffect(() => {
-    fixData();
+    fixData()
   }, [baseCurrency]);
-
-
 
   const fixData = () => {
     const dataArray = [];
@@ -41,7 +31,6 @@ const TanstackExchangeRateTable = ({ baseCurrency, exchangeRates }) => {
     setData(dataArray);
   }
 
-
   const columnHelper = createColumnHelper()
 
   const columns = [
@@ -53,31 +42,18 @@ const TanstackExchangeRateTable = ({ baseCurrency, exchangeRates }) => {
     columnHelper.accessor('targetCurrency', {
       header: () => 'Target',
       cell: info => info.renderValue(),
-      enableSorting: true,
       
     }),
     columnHelper.accessor('conversionRate', {
       header: () => 'Exchange Rates',
       cell: info => info.renderValue(),
-      enableSorting: true,
-      sortingFn: (
-        rowA,
-        rowB,
-        columnId
-      ) => {return 0; },
     }),
   ]
-
-  // const [data, setData] = useState(()=>[...defaultData])
 
   const table = useReactTable({
     data,
     columns,
-    state:{
-      columnSorts,
-    },
     getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
   })
 
   return (
@@ -115,47 +91,5 @@ const TanstackExchangeRateTable = ({ baseCurrency, exchangeRates }) => {
     </div>
   );
 };
-
-
-
-
-//   return (
-//     <div className="p-2">
-//       <table {...getTableProps()}>
-//         <thead>
-//           {headerGroups.map(headerGroup => (
-//             <tr key={headerGroup.id}>
-//               {headerGroup.headers.map(header => (
-//                 <th key={header.id} onClick={() => toggleSortBy(header.id)}>
-//                   {header.isPlaceholder ? null : header.render('Header')}
-//                   {sortBy[header.id] ? (
-//                     sortBy[header.id].desc ? (
-//                       '^'
-//                     ) : (
-//                      '^' 
-//                   )
-//                 ) : null}
-//                 </th>
-//               ))}
-//             </tr>
-//           ))}
-//         </thead>
-//         <tbody>
-//           {rows.map(row => {
-//             prepareRow(row);
-//             return (
-//               <tr key={row.id} {...row.getRowProps()}>
-//                 {row.cells.map(cell => (
-//                   <td key={cell.id}>{cell.render('Cell')}</td>
-//                 ))}
-//               </tr>
-//             );
-//           })}
-//         </tbody>
-//       </table>
-//       {/* ... */}
-//     </div>
-//   );
-// };
 
 export default TanstackExchangeRateTable;

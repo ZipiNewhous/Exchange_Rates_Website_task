@@ -1,6 +1,8 @@
 import React from 'react';
 
+
 const ExchangeRateTable = ({ baseCurrency, exchangeRates }) => {
+  
   if (!exchangeRates) {
     return <div>Loading exchange rates...</div>;
   }
